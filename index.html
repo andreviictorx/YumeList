@@ -3,23 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'dark-primary': '#1A1A2E',
+                        'accent-vibrant': '#00ADB5',
+                        'secondary-accent': '#FF2E63',
+                        'light-text': '#EEEEEE',
+                        'muted-text': '#A9A9A9',
+                        'card-bg': '#2E3D48',
+                    },
+                    fontFamily: {
+                        heading: ['"Montserrat"', 'sans-serif'],
+                        body: ['"Lato"', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'bold-light': '0 6px 15px rgba(0, 173, 181, 0.4)',
+                        'bold-dark': '0 6px 15px rgba(26, 26, 46, 0.6)',
+                    },
+                    keyframes: { // Adiciona keyframes para animação de pulso
+                        pulseCustom: {
+                            '0%, 100%': { opacity: '1' },
+                            '50%': { opacity: '.5' },
+                        }
+                    },
+                    animation: { // Adiciona animação de pulso
+                        pulseCustom: 'pulseCustom 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700&family=Lato:wght@400;700&display=swap" rel="stylesheet">
     <script src="src/main.js" defer></script>
     <title>YumeList</title>
 </head>
-<body>
-    <div id="appContainer">
-        <h1>Buscar Anime</h1>
-        <div class="container">
-            <input type="text" id="searchInput" placeholder="Digite seu anime">
-            <button id="searchBtn">Buscar</button>
-            <button id="favoritesBtn">Meus Favoritos ❤️</button>
+<body class="font-body text-light-text relative min-h-screen flex items-center justify-center py-12"
+      style="background-image: url('https://images.unsplash.com/photo-1579547621113-e2f2e1a3f4e2?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'); background-size: cover; background-position: center center; background-attachment: fixed;">
+
+    <div class="absolute inset-0 bg-dark-primary opacity-90 z-0"></div>
+
+    <div id="appContainer" class="relative z-10 bg-card-bg bg-opacity-95 rounded-xl p-8 sm:p-10 md:p-12 shadow-bold-dark mx-4 sm:mx-auto max-w-lg md:max-w-xl lg:max-w-3xl w-full border border-accent-vibrant/20">
+        <h1 class="font-heading text-4xl sm:text-5xl font-bold text-center mb-8 text-accent-vibrant tracking-wide uppercase">
+            YumeList<span class="block text-2xl sm:text-3xl mt-2 text-light-text font-normal normal-case">Seu Gerenciador de Animes</span>
+        </h1>
+        
+        <div class="flex flex-col sm:flex-row gap-5 mb-8">
+            <input type="text" id="searchInput" placeholder="Pesquisar por título..."
+                   class="flex-grow p-4 text-base rounded-lg border border-accent-vibrant/30 bg-dark-primary text-light-text placeholder-muted-text focus:outline-none focus:ring-2 focus:ring-accent-vibrant focus:border-transparent transition-all duration-300">
+            
+            <div class="flex flex-col sm:flex-row gap-3">
+                <button id="searchBtn"
+                        class="flex-shrink-0 px-8 py-3 text-base font-bold rounded-lg bg-accent-vibrant text-dark-primary hover:bg-accent-vibrant/90 transition-all duration-500 ease-out shadow-bold-light transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-accent-vibrant focus:ring-offset-2 focus:ring-offset-card-bg">
+                    Buscar
+                </button>
+                <button id="favoritesBtn"
+                        class="flex-shrink-0 px-8 py-3 text-base font-bold rounded-lg bg-secondary-accent text-light-text hover:bg-secondary-accent/90 transition-colors duration-500 ease-out shadow-bold-light transform hover:-translate-y-1 focus:outline-none focus:ring-2 focus:ring-secondary-accent focus:ring-offset-2 focus:ring-offset-card-bg">
+                    Meus Favoritos ❤️
+                </button>
+            </div>
         </div>
+
         <div class="resultArea">
-            <div id="result"></div>
-            <div id="favoriteList" style="display: none;"></div>
+            <div id="loadingIndicator" class="hidden flex flex-col items-center justify-center py-12">
+                <div class="relative flex h-16 w-16">
+                    <span class="absolute inline-flex h-full w-full rounded-full bg-accent-vibrant opacity-75 animate-pulseCustom"></span>
+                    <span class="relative inline-flex rounded-full h-16 w-16 bg-accent-vibrant"></span>
+                </div>
+                <p class="mt-6 text-xl font-semibold text-accent-vibrant animate-pulseCustom">Carregando dados...</p>
+            </div>
+
+            <div id="result" class="grid grid-cols-1 gap-8">
+            </div>
+            <div id="favoriteList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mt-8" style="display: none;">
+            </div>
         </div>
-        <div id="toast" class="toast"></div>
+        
+        <div id="toast" class="fixed bottom-8 right-8 text-white px-6 py-3 rounded-lg shadow-bold-light opacity-0 pointer-events-none transition-opacity duration-300 ease-in-out font-semibold z-50"></div>
     </div>
 
 </body>
